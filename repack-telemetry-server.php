@@ -25,7 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/inc/post-type.php';
-require_once __DIR__ . '/inc/class-logsupportersite.php';
-new RePack_Telemetry_Server\LogSupporterSite();
+require_once __DIR__ . '/inc/class-download-remote-image.php';
+require_once __DIR__ . '/inc/class-get-supporter-site.php';
+require_once __DIR__ . '/inc/class-log-supporter-site.php';
+
+// Init
+new RePack_Telemetry_Server\logSupporterSite();
+new RePack_Telemetry_Server\getSupporterSite();
 
 // phpcs:enable

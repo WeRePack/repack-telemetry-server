@@ -3,8 +3,8 @@
  * Log data.
  *
  * @package     RePack Telemetry Server
- * @author      Ari Stathopoulos
- * @copyright   Copyright (c) 2019, Aristeides Stathopoulos
+ * @author      Philipp Wellmer
+ * @copyright   Copyright (c) 2021, Philipp Wellmer
  * @license     https://opensource.org/licenses/GPL-2.0
  * @since       1.0
  */
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0
  */
-class LogSupporterSite {
+class logSupporterSite {
 
 
 	/**
@@ -165,7 +165,7 @@ class LogSupporterSite {
 		}
 
 		// Additionally set Site Host
-		$this->site_host = wp_parse_url( $this->site_url, 'host' );
+		$this->site_host = wp_parse_url( $this->site_url, PHP_URL_HOST );
 
 		return $continue_processing;
 	}
