@@ -20,17 +20,12 @@
  */
 
 // Exit if accessed directly.
-if (! defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-require_once __DIR__ . '/inc/log.php';
-require_once __DIR__ . '/inc/get-data.php';
-new RePack_Telemetry_Server\Log();
+require_once __DIR__ . '/inc/post-type.php';
+require_once __DIR__ . '/inc/class-logsupportersite.php';
+new RePack_Telemetry_Server\LogSupporterSite();
 
-add_shortcode('repack-telemetry-stats', function () {
-    ob_start();
-    include_once __DIR__ . '/inc/template.php';
-    return ob_get_clean();
-});
 // phpcs:enable
