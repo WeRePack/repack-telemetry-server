@@ -2,16 +2,16 @@
 /**
  * Template file for the charts.
  *
- * @package     Kirki Telemetry Server
+ * @package     RePack Telemetry Server
  * @author      Ari Stathopoulos
  * @copyright   Copyright (c) 2019, Aristeides Stathopoulos
  * @license     https://opensource.org/licenses/GPL-2.0
  * @since       1.0
  */
 
-namespace Kirki_Telemetry_Server;
+namespace RePack_Telemetry_Server;
 
-use Kirki_Telemetry_Server\Get_Data;
+use RePack_Telemetry_Server\Get_Data;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $option           Used as an ID.
  * @param string $label            The label for this graph.
  */
-function kirki_telemetry_stats_lines( $data_from_option, $option, $label ) {
+function repack_telemetry_stats_lines( $data_from_option, $option, $label ) {
 
 	$labels = array_keys( $data_from_option );
 
@@ -41,8 +41,8 @@ function kirki_telemetry_stats_lines( $data_from_option, $option, $label ) {
 	$datasets = [];
 	foreach ( $all_options_from_data as $choice ) {
 		if ( 'fields_all' === $option || 'fields_single' === $option ) {
-			if ( 0 === strpos( $choice, 'kirki-' ) ) {
-				$choice = str_replace( 'kirki-', '', $choice );
+			if ( 0 === strpos( $choice, 'repack-' ) ) {
+				$choice = str_replace( 'repack-', '', $choice );
 			}
 		}
 		if ( 'Readline Child' === $choice ) {
@@ -62,7 +62,7 @@ function kirki_telemetry_stats_lines( $data_from_option, $option, $label ) {
 	?>
 	<canvas id="line-chart-<?php echo esc_attr( $option ); ?>"></canvas>
 	<script>
-	kirkiStatsDrawChartLines(
+	repackStatsDrawChartLines(
 		document.getElementById( 'line-chart-<?php echo esc_attr( $option ); ?>' ),
 		<?php echo wp_json_encode( $labels ); ?>,
 		<?php echo wp_json_encode( $datasets ); ?>,
@@ -80,7 +80,7 @@ function kirki_telemetry_stats_lines( $data_from_option, $option, $label ) {
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js" integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8=" crossorigin="anonymous"></script>
 <script>
-var kirkiStatsDrawChartLines = function( el, labels, datasets, text ) {
+var repackStatsDrawChartLines = function( el, labels, datasets, text ) {
 	new Chart( el, {
 		type: 'line',
 		data: {
@@ -103,27 +103,27 @@ var kirkiStatsDrawChartLines = function( el, labels, datasets, text ) {
 <div class="wrapper">
 	<div>
 		<p>Monthly statistics - PHP Versions.</p>
-		<div><?php kirki_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'php_version' ), 'php_version', 'PHP Versions' ); ?></div>
+		<div><?php repack_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'php_version' ), 'php_version', 'PHP Versions' ); ?></div>
 	</div>
 	<div>
 		<p>Monthly statistics - Theme Name</p>
-		<div><?php kirki_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'theme_name' ), 'theme_name', 'Theme Name' ); ?></div>
+		<div><?php repack_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'theme_name' ), 'theme_name', 'Theme Name' ); ?></div>
 	</div>
 	<div>
 		<p>Monthly statistics - All field-types used. Duplicates are not removed from themes, so if a theme uses 10 color fields then all 10 will be registered. This helps us understand which fields are the most-used ones.</p>
-		<div><?php kirki_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'field_types' )['all'], 'fields_all', 'Fields - All' ); ?></div>
+		<div><?php repack_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'field_types' )['all'], 'fields_all', 'Fields - All' ); ?></div>
 	</div>
 	<div>
 		<p>Monthly statistics - All field-types used. Duplicates are removed, so if a theme uses 10 color fields then only 1 will be registered. This helps us understand which fields are necessary to most theme developers.</p>
-		<div><?php kirki_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'field_types' )['singles'], 'fields_single', 'Fields - Single' ); ?></div>
+		<div><?php repack_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'field_types' )['singles'], 'fields_single', 'Fields - Single' ); ?></div>
 	</div>
 	<div>
 		<p>Theme Author.</p>
-		<?php kirki_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'theme_author' ), 'theme_author', 'Theme Author' ); ?>
+		<?php repack_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'theme_author' ), 'theme_author', 'Theme Author' ); ?>
 	</div>
 	<div>
 		<p>Theme URI</p>
-		<?php kirki_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'theme_uri' ), 'theme_uri', 'Theme URI' ); ?>
+		<?php repack_telemetry_stats_lines( Get_Data::get_instance()->get_settings( 'theme_uri' ), 'theme_uri', 'Theme URI' ); ?>
 	</div>
 </div>
 

@@ -2,14 +2,14 @@
 /**
  * Get data.
  *
- * @package     Kirki Telemetry Server
+ * @package     RePack Telemetry Server
  * @author      Ari Stathopoulos
  * @copyright   Copyright (c) 2019, Aristeides Stathopoulos
  * @license     https://opensource.org/licenses/GPL-2.0
  * @since       1.0
  */
 
-namespace Kirki_Telemetry_Server;
+namespace RePack_Telemetry_Server;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,7 +30,7 @@ class Get_Data {
 	 * @since 1.0
 	 * @var string
 	 */
-	private $option_prefix = 'kirki_telemetry_data';
+	private $option_prefix = 'repack_telemetry_data';
 
 	/**
 	 * The PHP version.
