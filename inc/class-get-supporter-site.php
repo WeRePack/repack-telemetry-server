@@ -27,7 +27,8 @@ class getSupporterSite {
 	 */
 	public function init() {
 		// Publish & update supporter posts
-		add_action( 'wp_insert_post', array( $this, 'add_supporter_screenshot' ), 10, 3 );
+		add_action( 'wp_insert_post', array( $this, 'add_supporter_screenshot' ), 10, 1 );
+		add_action( 'repack_schedule_set_supporter_screenshot', array( $this, 'add_supporter_screenshot' ), 10, 1 );
 	}
 
 	public static function get_supporter_meta( $supporter_id, $meta_key ) {
@@ -41,8 +42,8 @@ class getSupporterSite {
 	 * @param $post
 	 * @param $update
 	 */
-	public function add_supporter_screenshot( $post_id, $post, $update ) {
-		if ( $post->post_type === 'repack_sites' ) {
+	public function add_supporter_screenshot( $post_id ) {
+		if ( get_post_type( $post_id ) === 'repack_sites' ) {
 			if ( ! has_post_thumbnail( $post_id ) ) {
 				// Create new screenshot and attach to supporter post
 				$url = self::get_supporter_meta( $post_id, 'site_url' );
@@ -91,6 +92,9 @@ class getSupporterSite {
 					}
 				}
 			}
+
+			// No success, try again in a minute
+			wp_schedule_single_event( time() + 60, 'repack_schedule_set_supporter_screenshot', array( $supporter_id ) );
 		}
 
 		return false;
