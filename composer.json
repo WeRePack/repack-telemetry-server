@@ -14,6 +14,8 @@
             "email": "philipp@ouun.io"
         }
     ],
+    "autoload": {
+    },
     "require": {
         "php": ">=7",
         "composer/installers": "~1.0"
@@ -28,7 +30,7 @@
             "phpcs --colors --ignore=index.php,vendor,resources,storage,dist --extensions=php --standard=WordPress-Extra ."
         ],
         "fix": [
-            "phpcbf -q --ignore=index.php,vendor,resources,storage,dist --extensions=php --standard=WordPress-Extra . && composer lint"
+            "phpcbf -q --ignore=index.php,vendor,resources,storage,dist --extensions=php --standard=WordPress-Extra ."
         ]
     }
 }

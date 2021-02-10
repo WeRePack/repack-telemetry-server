@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:   RePack Telemetry Server
  * Plugin URI:    https://WeRePack.org/
@@ -24,13 +25,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Load files
 require_once __DIR__ . '/inc/post-type.php';
-require_once __DIR__ . '/inc/class-download-remote-image.php';
-require_once __DIR__ . '/inc/class-get-supporter-site.php';
-require_once __DIR__ . '/inc/class-log-supporter-site.php';
+require_once __DIR__ . '/inc/class-DownloadRemoteImage.php';
+require_once __DIR__ . '/inc/class-GetSupporterSite.php';
+require_once __DIR__ . '/inc/class-LogSupporterSite.php';
 
 // Init
-new RePack_Telemetry_Server\logSupporterSite();
-new RePack_Telemetry_Server\getSupporterSite();
+new RePack_Telemetry_Server\LogSupporterSite();
+new RePack_Telemetry_Server\GetSupporterSite();
 
 // phpcs:enable

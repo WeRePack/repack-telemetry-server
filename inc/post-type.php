@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Post Type & Custom Fields for Supporter Sites.
  *
@@ -90,7 +91,6 @@ if ( ! function_exists( 'repack_supporter_sites_post_type' ) ) {
  * Add Expired Post Status
  */
 if ( ! function_exists( 'repack_supporter_sites_post_status' ) ) {
-
 	// Register Custom Status
 	add_action(
 		'init',
@@ -107,7 +107,6 @@ if ( ! function_exists( 'repack_supporter_sites_post_status' ) ) {
 				'dashicon'                  => 'dashicons-hidden',
 			);
 			register_post_status( 'Expired', $args );
-
 		},
 		5
 	);

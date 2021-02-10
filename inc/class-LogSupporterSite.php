@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Log data.
  *
@@ -21,7 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0
  */
-class logSupporterSite {
+class LogSupporterSite {
+
+
 
 
 	/**

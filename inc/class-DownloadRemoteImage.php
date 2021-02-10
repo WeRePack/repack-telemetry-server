@@ -12,7 +12,9 @@ namespace RePack_Telemetry_Server;
  * $attachment_id         = $download_remote_image->download();
  *
  */
-class Download_Remote_Image {
+class DownloadRemoteImage {
+
+
 
 	/**
 	 * Remote image URL.
@@ -325,7 +327,8 @@ class Download_Remote_Image {
 	 */
 	private function update_post_data() {
 
-		if ( empty( $this->attachment_data['title'] )
+		if (
+			empty( $this->attachment_data['title'] )
 			&& empty( $this->attachment_data['caption'] )
 			&& empty( $this->attachment_data['description'] )
 		) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Get supporter data.
  *
@@ -11,7 +12,9 @@
 
 namespace RePack_Telemetry_Server;
 
-class getSupporterSite {
+class GetSupporterSite {
+
+
 
 
 	function __construct() {
@@ -118,7 +121,7 @@ class getSupporterSite {
 	 * @return bool True on success or false on failure.
 	 */
 	private function set_remote_image_as_featured_image( $post_id, $url, $attachment_data = array() ) {
-		$download_remote_image = new Download_Remote_Image( $url, $attachment_data );
+		$download_remote_image = new DownloadRemoteImage($url, $attachment_data );
 		$attachment_id         = $download_remote_image->download();
 
 		if ( ! $attachment_id ) {
