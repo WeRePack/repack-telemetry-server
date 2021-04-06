@@ -27,6 +27,7 @@ class LogSupporterSite {
 
 
 
+
 	/**
 	 * Prefix for our settings.
 	 *
@@ -107,7 +108,7 @@ class LogSupporterSite {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		add_action( 'wp', array( $this, 'init' ) );
+		 add_action( 'wp', array( $this, 'init' ) );
 	}
 
 	/**
@@ -118,7 +119,6 @@ class LogSupporterSite {
 	 * @return void
 	 */
 	public function init() {
-
 		// Early exit if this is not a request we want to log.
 		if ( ! isset( $_POST['action'] ) || 'repack-stats' !== sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 			return;
@@ -127,16 +127,29 @@ class LogSupporterSite {
 		// Get data from request & check completeness
 		$continue_processing = $this->get_data_from_request();
 
-		// Exit if required data is not available.
-		if ( ! $continue_processing ) {
-			return;
+		// Continue if required data is available && if site is pingable
+		if ( $continue_processing && $this->can_ping_site( $this->site_url ) ) {
+			// Lookup existing supporter
+			$supporter_id = $this->get_site_post();
+
+			// Create post
+			$this->create_site_post( $supporter_id );
+
+			$code    = '200';
+			$message = 'Data submitted successfully.';
+		} else {
+			// todo: We could get error code here from can_ping_site()
+			$code    = '403';
+			$message = 'We were unable to reach your site.';
 		}
 
-		// Lookup existing supporter
-		$supporter_id = $this->get_site_post();
-
-		// Create post
-		$this->create_site_post( $supporter_id );
+		wp_die(
+			$message . ' Status Code: ' . $code,
+			'WeRePack.org Telemetry Server',
+			array(
+				'response' => $code,
+			)
+		);
 	}
 
 	/**
@@ -180,6 +193,27 @@ class LogSupporterSite {
 	 */
 	private function get_site_post() {
 		return get_page_by_title( $this->site_host, OBJECT, 'repack_sites' )->ID;
+	}
+
+	/**
+	 * Check if a URL is publicy pingable
+	 *
+	 * @param $url
+	 *
+	 * @return bool
+	 */
+	public function can_ping_site( $url ) {
+		$response = wp_remote_get(
+			$url,
+			array(
+				'timeout' => 30,
+				'headers' => array(
+					'referer' => home_url(),
+				),
+			)
+		);
+
+		return is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ? false : true;
 	}
 
 	/**
