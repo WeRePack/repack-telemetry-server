@@ -168,6 +168,7 @@ class LogSupporterSite {
 			'repackStart'    => 'repack_start',
 			'repackCounter'  => 'repack_counter',
 			'repackRatio'    => 'repack_ratio',
+			'repackCoupon'   => 'repack_coupon',
 			'repackLastSent' => 'repack_last_sent',
 		);
 
@@ -237,7 +238,7 @@ class LogSupporterSite {
 		);
 
 		// Log data for PHP version and theme.
-		foreach ( array( 'site_url', 'site_lang', 'repack_start', 'repack_counter', 'repack_ratio', 'repack_last_sent' ) as $data_key ) {
+		foreach ( array( 'site_url', 'site_lang', 'repack_start', 'repack_counter', 'repack_ratio', 'repack_coupon', 'repack_last_sent' ) as $data_key ) {
 			// Skip if no data defined.
 			if ( ! $this->$data_key ) {
 				continue;
