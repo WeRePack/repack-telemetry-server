@@ -229,7 +229,7 @@ class LogSupporterSite {
 				'ID'                => $supporter_id,
 				'post_type'         => 'repack_sites',
 				'post_date_gmt'     => gmdate( 'Y-m-d H:i', $this->repack_start ),
-				'post_modified_gmt' => gmdate( 'Y-m-d H:i', $this->repack_last_sent ),
+				'post_modified_gmt'  => gmdate( 'Y-m-d H:i', $this->repack_last_sent ),
 				'post_title'        => wp_strip_all_tags( $this->site_host ),
 				'post_content'      => wp_strip_all_tags( $this->site_url ),
 				'post_status'       => $supporter_id > 0 ? get_post_status( $supporter_id ) : 'pending',
