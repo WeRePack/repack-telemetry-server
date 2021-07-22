@@ -108,7 +108,7 @@ class LogSupporterSite {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		 add_action( 'wp', array( $this, 'init' ) );
+		add_action( 'wp', array( $this, 'init' ) );
 	}
 
 	/**
@@ -126,6 +126,13 @@ class LogSupporterSite {
 
 		// Get data from request & check completeness
 		$continue_processing = $this->get_data_from_request();
+
+		if ( ! $continue_processing ) {
+			wp_die(
+				'Error: Passed data is incomplete. Please update WeRePack Plugin to latest version.',
+				'WeRePack.org Telemetry Server'
+			);
+		}
 
 		// Continue if required data is available && if site is pingable
 		if ( $continue_processing && $this->can_ping_site( $this->site_url ) ) {
@@ -229,7 +236,7 @@ class LogSupporterSite {
 				'ID'                => $supporter_id,
 				'post_type'         => 'repack_sites',
 				'post_date_gmt'     => gmdate( 'Y-m-d H:i', $this->repack_start ),
-				'post_modified_gmt'  => gmdate( 'Y-m-d H:i', $this->repack_last_sent ),
+				'post_modified_gmt' => gmdate( 'Y-m-d H:i', $this->repack_last_sent ),
 				'post_title'        => wp_strip_all_tags( $this->site_host ),
 				'post_content'      => wp_strip_all_tags( $this->site_url ),
 				'post_status'       => $supporter_id > 0 ? get_post_status( $supporter_id ) : 'pending',
@@ -279,5 +286,8 @@ class LogSupporterSite {
 			$history_meta_name,
 			$history
 		);
+
+		// Newly created supporter is "pending"
+		do_action( 'repack_telemetry:after_supporter_updated', (int) $supporter_id, (string) get_post_status( $supporter_id ) );
 	}
 }
