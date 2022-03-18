@@ -12,6 +12,8 @@
 
 namespace RePack_Telemetry_Server;
 
+use WP_REST_Server;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0
  */
 class LogSupporterSite {
+
 
 
 
@@ -108,59 +111,92 @@ class LogSupporterSite {
 	 * @since 1.0
 	 */
 	public function __construct() {
-		 add_action( 'wp', array( $this, 'init' ) );
+		add_action( 'rest_api_init', array( $this, 'werepack_api_register_route' ) );
 	}
 
 	/**
-	 * Things to do, places to see.
+	 * Register Site REST API Route
+	 * @since 2.0
 	 *
-	 * @access public
-	 * @since 1.0
 	 * @return void
 	 */
-	public function init() {
-		// Early exit if this is not a request we want to log.
-		if ( ! isset( $_POST['action'] ) || 'repack-stats' !== sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
-			return;
-		}
+	public function werepack_api_register_route() {
+		register_rest_route(
+			'community/v1',
+			'/sites',
+			array(
+				'methods'             => 'POST',
+				'permission_callback' => '__return_true',
+				'callback'            => array( $this, 'werepack_api_process_request' ),
+			)
+		);
+	}
+
+	/**
+	 * Process API Request
+	 * @since 2.0
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function werepack_api_process_request( \WP_REST_Request $request ) {
+		$request_body = $request->get_body_params();
+		$response     = new \WP_REST_Response(
+			array(
+				'message' => 'Successful',
+			)
+		);
+		$response->set_status( 200 );
 
 		// Get data from request & check completeness
-		$continue_processing = $this->get_data_from_request();
+		$missing_data = $this->get_missing_data_from_request( $request_body );
+
+		if ( ! empty( $missing_data ) ) {
+			return new \WP_Error(
+				'invalid_request',
+				'Error: Passed data is incomplete: ' . implode( ', ', $missing_data ) . ' missing. Please update WeRePack Plugin to latest version.',
+				array(
+					'status' => 403,
+				)
+			);
+		}
 
 		// Continue if required data is available && if site is pingable
-		if ( $continue_processing && $this->can_ping_site( $this->site_url ) ) {
+		if ( $this->can_ping_site( $this->site_url ) ) {
 			// Lookup existing supporter
 			$supporter_id = $this->get_site_post();
 
 			// Create post
 			$this->create_site_post( $supporter_id );
 
-			$code    = '200';
-			$message = 'Data submitted successfully.';
+			$response = new \WP_REST_Response(
+				array(
+					'message' => 'Data submitted successfully.',
+				)
+			);
+			$response->set_status( 200 );
+			return $response;
 		} else {
-			// todo: We could get error code here from can_ping_site()
-			$code    = '403';
-			$message = 'We were unable to reach your site.';
+			return new \WP_Error(
+				'invalid_request',
+				'Error: We were unable to reach your site.',
+				array(
+					'status' => 403,
+				)
+			);
 		}
-
-		wp_die(
-			$message . ' Status Code: ' . $code,
-			'WeRePack.org Telemetry Server',
-			array(
-				'response' => $code,
-			)
-		);
 	}
 
 	/**
 	 * Get data from the request and set as object properties.
 	 *
 	 * @access private
-	 * @since 1.0
-	 * @return bool
+	 * @return array
+	 * @since 2.0
 	 */
-	private function get_data_from_request() {
-		$continue_processing = true;
+	private function get_missing_data_from_request( $request_body ) {
+		$missing_data = array();
 
 		$data_to_collect = array(
 			'siteURL'        => 'site_url',
@@ -173,18 +209,17 @@ class LogSupporterSite {
 		);
 
 		foreach ( $data_to_collect as $key => $property ) {
-			if ( isset( $_POST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
-				$this->$property = sanitize_text_field( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+			if ( isset( $request_body[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+				$this->$property = sanitize_text_field( wp_unslash( $request_body[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 			} else {
-				// Do not process further actions
-				$continue_processing = false;
+				$missing_data[] = $key;
 			}
 		}
 
-		// Additionally set Site Host
+		// Additionally, set Site Host
 		$this->site_host = wp_parse_url( $this->site_url, PHP_URL_HOST );
 
-		return $continue_processing;
+		return $missing_data;
 	}
 
 	/**
@@ -229,7 +264,7 @@ class LogSupporterSite {
 				'ID'                => $supporter_id,
 				'post_type'         => 'repack_sites',
 				'post_date_gmt'     => gmdate( 'Y-m-d H:i', $this->repack_start ),
-				'post_modified_gmt'  => gmdate( 'Y-m-d H:i', $this->repack_last_sent ),
+				'post_modified_gmt' => gmdate( 'Y-m-d H:i', $this->repack_last_sent ),
 				'post_title'        => wp_strip_all_tags( $this->site_host ),
 				'post_content'      => wp_strip_all_tags( $this->site_url ),
 				'post_status'       => $supporter_id > 0 ? get_post_status( $supporter_id ) : 'pending',
@@ -279,5 +314,8 @@ class LogSupporterSite {
 			$history_meta_name,
 			$history
 		);
+
+		// Newly created supporter is "pending"
+		do_action( 'repack_telemetry:after_supporter_updated', (int) $supporter_id, (string) get_post_status( $supporter_id ) );
 	}
 }
