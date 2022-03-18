@@ -150,13 +150,6 @@ class LogSupporterSite {
 		$response->set_status( 200 );
 
 		// Get data from request & check completeness
-
-		if ( ! $continue_processing ) {
-			wp_die(
-				'Error: Passed data is incomplete. Please update WeRePack Plugin to latest version.',
-				'WeRePack.org Telemetry Server'
-			);
-		}
 		$missing_data = $this->get_missing_data_from_request( $request_body );
 
 		if ( ! empty( $missing_data ) ) {
@@ -206,22 +199,26 @@ class LogSupporterSite {
 		$missing_data = array();
 
 		$data_to_collect = array(
-			'siteURL'        => 'site_url',
-			'siteLang'       => 'site_lang',
-			'repackStart'    => 'repack_start',
-			'repackCounter'  => 'repack_counter',
-			'repackRatio'    => 'repack_ratio',
-			'repackCoupon'   => 'repack_coupon',
-			'repackLastSent' => 'repack_last_sent',
+			'site_url',
+			'site_lang',
+			'repack_start',
+			'repack_counter',
+			'repack_ratio',
+			'repack_coupon',
+			'repack_last_sent',
 		);
 
-		foreach ( $data_to_collect as $key => $property ) {
-			if ( isset( $request_body[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
-				$this->$property = sanitize_text_field( wp_unslash( $request_body[ $key ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+		foreach ( $data_to_collect as $property ) {
+			if ( isset( $request_body[ $property ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+				$this->$property = sanitize_text_field( wp_unslash( $request_body[ $property ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 			} else {
-				$missing_data[] = $key;
+				$missing_data[] = $property;
 			}
 		}
+
+
+		ray($request_body);
+		ray($missing_data);
 
 		// Additionally, set Site Host
 		$this->site_host = wp_parse_url( $this->site_url, PHP_URL_HOST );

@@ -6,7 +6,7 @@
  * Description:   Gathering anonymous data from sites using the RePack plugin and providing some useful stats and insights.
  * Author:        Philipp Wellmer
  * Author URI:    http://werepack.org
- * Version:       2.0
+ * Version:       2.0.1
  * Text Domain:   repack-ts
  *
  * GitHub Plugin URI: https://github.com/ouun/repack-telemetry-server
