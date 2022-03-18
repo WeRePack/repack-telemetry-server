@@ -150,6 +150,13 @@ class LogSupporterSite {
 		$response->set_status( 200 );
 
 		// Get data from request & check completeness
+
+		if ( ! $continue_processing ) {
+			wp_die(
+				'Error: Passed data is incomplete. Please update WeRePack Plugin to latest version.',
+				'WeRePack.org Telemetry Server'
+			);
+		}
 		$missing_data = $this->get_missing_data_from_request( $request_body );
 
 		if ( ! empty( $missing_data ) ) {
