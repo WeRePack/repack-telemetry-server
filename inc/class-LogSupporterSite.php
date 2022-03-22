@@ -216,10 +216,6 @@ class LogSupporterSite {
 			}
 		}
 
-
-		ray($request_body);
-		ray($missing_data);
-
 		// Additionally, set Site Host
 		$this->site_host = wp_parse_url( $this->site_url, PHP_URL_HOST );
 
@@ -276,7 +272,7 @@ class LogSupporterSite {
 			)
 		);
 
-		// Log data for PHP version and theme.
+		// Log data
 		foreach ( array( 'site_url', 'site_lang', 'repack_start', 'repack_counter', 'repack_ratio', 'repack_coupon', 'repack_last_sent' ) as $data_key ) {
 			// Skip if no data defined.
 			if ( ! $this->$data_key ) {
