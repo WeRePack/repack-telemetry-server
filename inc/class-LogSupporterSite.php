@@ -26,11 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class LogSupporterSite {
 
-
-
-
-
-
 	/**
 	 * Prefix for our settings.
 	 *
@@ -142,24 +137,21 @@ class LogSupporterSite {
 	 */
 	public function werepack_api_process_request( \WP_REST_Request $request ) {
 		$request_body = $request->get_body_params();
-		$response     = new \WP_REST_Response(
-			array(
-				'message' => 'Successful',
-			)
-		);
-		$response->set_status( 200 );
 
 		// Get data from request & check completeness
 		$missing_data = $this->get_missing_data_from_request( $request_body );
 
 		if ( ! empty( $missing_data ) ) {
-			return new \WP_Error(
-				'invalid_request',
-				'Error: Passed data is incomplete: ' . implode( ', ', $missing_data ) . ' missing. Please update WeRePack Plugin to latest version.',
+			$response = new \WP_REST_Response(
 				array(
-					'status' => 403,
+					'message' => sprintf( esc_html__( 'Passed data is incomplete: %s missing. Please update the WeRePack Plugin to latest version.', 'repack-ts' ), implode( ', ', $missing_data ) ),
 				)
 			);
+
+			$response->set_status( 400 );
+
+			// Fail early
+			return $response;
 		}
 
 		// Continue if required data is available && if site is pingable
@@ -172,20 +164,22 @@ class LogSupporterSite {
 
 			$response = new \WP_REST_Response(
 				array(
-					'message' => 'Data submitted successfully.',
+					'message' => esc_html__( 'Data submitted successfully.', 'repack-ts' ),
 				)
 			);
+
 			$response->set_status( 200 );
-			return $response;
 		} else {
-			return new \WP_Error(
-				'invalid_request',
-				'Error: We were unable to reach your site.',
+			$response = new \WP_REST_Response(
 				array(
-					'status' => 403,
+					'message' => sprintf( esc_html__( 'We were unable to reach your site at %s.', 'repack-ts' ), $this->site_url ),
 				)
 			);
+
+			$response->set_status( 403 );
 		}
+
+		return $response;
 	}
 
 	/**
