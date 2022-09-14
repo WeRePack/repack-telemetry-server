@@ -9,7 +9,7 @@
  * Version:       2.0.1
  * Text Domain:   repack-ts
  *
- * GitHub Plugin URI: https://github.com/ouun/repack-telemetry-server
+ * GitHub Plugin URI: https://github.com/WeRePack/repack-telemetry-server
  *
  * @package     RePack Telemetry Server
  * @author      Ari Stathopoulos
