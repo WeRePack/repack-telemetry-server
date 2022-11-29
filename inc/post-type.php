@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Post Type & Custom Fields for Supporter Sites.
+ * Post Type & Custom Fields for Community Sites.
  *
  * @package     RePack Telemetry Server
  * @author      Philipp Wellmer
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Add Supporter Sites Post Type
+ * Add Community Sites Post Type
  */
 if ( ! function_exists( 'repack_supporter_sites_post_type' ) ) {
 	// Register Custom Post Type
@@ -26,11 +26,11 @@ if ( ! function_exists( 'repack_supporter_sites_post_type' ) ) {
 		'init',
 		function () {
 			$labels  = array(
-				'name'                  => _x( 'Supporter Sites', 'Post Type General Name', 'repack-ts' ),
-				'singular_name'         => _x( 'Supporter Site', 'Post Type Singular Name', 'repack-ts' ),
-				'menu_name'             => __( 'Supporter Sites', 'repack-ts' ),
-				'name_admin_bar'        => __( 'Supporter Sites', 'repack-ts' ),
-				'archives'              => __( 'Supporter Sites', 'repack-ts' ),
+				'name'                  => _x( 'Community Sites', 'Post Type General Name', 'repack-ts' ),
+				'singular_name'         => _x( 'Community Site', 'Post Type Singular Name', 'repack-ts' ),
+				'menu_name'             => __( 'Community Sites', 'repack-ts' ),
+				'name_admin_bar'        => __( 'Community Sites', 'repack-ts' ),
+				'archives'              => __( 'Community Sites', 'repack-ts' ),
 				'attributes'            => __( 'Site Attributes', 'repack-ts' ),
 				'parent_item_colon'     => __( 'Parent Item:', 'repack-ts' ),
 				'all_items'             => __( 'All Sites', 'repack-ts' ),
@@ -61,8 +61,8 @@ if ( ! function_exists( 'repack_supporter_sites_post_type' ) ) {
 				'feeds'      => true,
 			);
 			$args    = array(
-				'label'               => __( 'Supporter Site', 'repack-ts' ),
-				'description'         => __( 'WeRePack Supporter Sites', 'repack-ts' ),
+				'label'               => __( 'Community Site', 'repack-ts' ),
+				'description'         => __( 'WeRePack Community Sites', 'repack-ts' ),
 				'labels'              => $labels,
 				'supports'            => array( 'title', 'thumbnail', 'trackbacks', 'custom-fields' ),
 				'hierarchical'        => false,
